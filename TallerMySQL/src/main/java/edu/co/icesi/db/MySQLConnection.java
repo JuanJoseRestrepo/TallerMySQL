@@ -95,6 +95,8 @@ public class MySQLConnection {
         return output;
     }
 
+
+
     public boolean lookAtNotRepeatGenero(String genero){
         boolean t = false;
         ArrayList<Genero> output = getAllGeneros();

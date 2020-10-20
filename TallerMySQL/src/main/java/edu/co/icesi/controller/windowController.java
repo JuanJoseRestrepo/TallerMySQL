@@ -102,6 +102,10 @@ public class windowController implements Initializable {
 
     }
 
+    public void agregarActor(ActionEvent e){
+
+    }
+
     public void refreshInformationGenero(){
         informacionGenero.clear();
         informacionGenero.appendText("Genero: id,nombre" + "\n");
