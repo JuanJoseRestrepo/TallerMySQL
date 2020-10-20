@@ -1,20 +1,22 @@
 package edu.co.icesi.controller;
 
 import edu.co.icesi.db.MySQLConnection;
-import edu.co.icesi.model.*;
+import edu.co.icesi.model.Genero;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.util.Callback;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 
-
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class windowController {
+public class windowController implements Initializable {
 
     @FXML
     private Button botonDeAgregar; //Agregar Pelicula
@@ -42,6 +44,12 @@ public class windowController {
         connection.crearTablaGenero();
         connection.crearTablaPivote();
     }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+    refreshInformationGenero();
+    }
+
 
 
     //Acciones
@@ -82,6 +90,7 @@ public class windowController {
 
             if(!connection.lookAtNotRepeatGenero(m1.get().getNombre())){
                 connection.agregarGenero(m1.get());
+                refreshInformationGenero();
             }else{
                 Alert gameOver = new Alert(AlertType.INFORMATION);
                 gameOver.setTitle("ERROR");
@@ -93,9 +102,17 @@ public class windowController {
 
     }
 
+    public void refreshInformationGenero(){
+        informacionGenero.clear();
+        informacionGenero.appendText("Genero: id,nombre" + "\n");
+        ArrayList<Genero> output = connection.getAllGeneros();
+        for(int i = 0; i < output.size(); i++){
+           informacionGenero.appendText("Id:" + output.get(i).getId() + "  " + "Nombre:" + output.get(i).getNombre() + "\n");
+        }
 
+    }
 
-    //GETTERS AND SETTERS
+    //----GETTERS AND SETTERS-----
     public Button getBotonDeAgregar() {
         return botonDeAgregar;
     }
@@ -159,4 +176,6 @@ public class windowController {
     public void setTituloAuxiliar(Label tituloAuxiliar) {
         TituloAuxiliar = tituloAuxiliar;
     }
+
+
 }

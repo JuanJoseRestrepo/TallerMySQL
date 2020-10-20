@@ -20,7 +20,7 @@
          </children>
       </VBox>
       <TextArea layoutX="20.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
-      <TextArea layoutX="301.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
+      <TextArea fx:id="informacionGenero" layoutX="301.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
       <Label layoutX="301.0" layoutY="5.0" text="Pelicula" />
       <Label layoutX="21.0" layoutY="362.0" text="Actor" />
       <Label layoutX="301.0" layoutY="362.0" text="Genero" />
