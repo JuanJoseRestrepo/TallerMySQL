@@ -1,7 +1,9 @@
 package edu.co.icesi.controller;
 
 import edu.co.icesi.db.MySQLConnection;
+import edu.co.icesi.model.Actor;
 import edu.co.icesi.model.Genero;
+import edu.co.icesi.model.Pelicula;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,7 +40,7 @@ public class windowController implements Initializable {
     private MySQLConnection connection;
 
     public windowController(){
-        connection = new MySQLConnection();
+        connection = MySQLConnection.getInstance();
         connection.crearTablaPelicula();
         connection.crearTablaActor();
         connection.crearTablaGenero();
@@ -48,6 +50,8 @@ public class windowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     refreshInformationGenero();
+    refreshInformationPeliculas();
+    refreshInformationActor();
     }
 
 
@@ -77,6 +81,11 @@ public class windowController implements Initializable {
 
                         return m;
 
+                    }else{
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Dejaste el campo vacio");
+                        gameOver.showAndWait();
                     }
                 }
 
@@ -104,15 +113,195 @@ public class windowController implements Initializable {
 
     public void agregarActor(ActionEvent e){
 
+        Dialog<Actor> dialog = new Dialog<Actor>();
+        dialog.setTitle("Actor");
+        dialog.setHeaderText("Por favor, agregue un Actor");
+        dialog.setResizable(false);
+        Label label1 = new Label("Nombre del actor: ");
+        TextField texto1 = new TextField();
+        Label label2 = new Label("Apellido del actor: ");
+        TextField texto2 = new TextField();
+        Label label3 = new Label("Edad del actor: ");
+        TextField texto3 = new TextField();
+
+        GridPane grid = new GridPane();
+        grid.add(label1,1,1);
+        grid.add(texto1,2,1);
+        grid.add(label2,1,2);
+        grid.add(texto2,2,2);
+        grid.add(label3,1,3);
+        grid.add(texto3,2,3);
+
+        dialog.getDialogPane().setContent(grid);
+
+
+        ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        dialog.setResultConverter(new Callback<ButtonType, Actor>() {
+            public Actor call(ButtonType b) {
+
+                if(b == buttonTypeOk) {
+                    try {
+                        if(!texto1.getText().isEmpty() && !texto2.getText().isEmpty() && !texto3.getText().isEmpty()) {
+                            Actor m = new Actor(-1,texto1.getText(),texto2.getText(),Integer.parseInt(texto3.getText()));
+
+                            return m;
+
+                        }else{
+                            Alert gameOver = new Alert(AlertType.INFORMATION);
+                            gameOver.setTitle("ERROR");
+                            gameOver.setHeaderText("Dejaste el campo vacio");
+                            gameOver.showAndWait();
+                        }
+                    }catch (NumberFormatException e){
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Formato de edad invalido");
+                        gameOver.showAndWait();
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<Actor> m1 = dialog.showAndWait();
+
+        if(m1.isPresent()){
+
+            if(!connection.lookAtNotRepeatActor(m1.get().getNombre(), m1.get().getApellido())){
+                connection.agregarActor(m1.get());
+                refreshInformationActor();
+            }else{
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("Ya hay un actor igual");
+                gameOver.showAndWait();
+            }
+
+        }
+
+    }
+
+    public void agregarPelicula(ActionEvent e){
+        Dialog<Pelicula> dialog = new Dialog<>();
+        dialog.setTitle("Peliculas");
+        dialog.setHeaderText("Por favor, agregue una pelicula");
+        dialog.setResizable(false);
+        Label label1 = new Label("Nombre de la pelicula: ");
+        TextField texto1 = new TextField();
+        GridPane grid = new GridPane();
+        grid.add(label1,1,1);
+        grid.add(texto1,2,1);
+        dialog.getDialogPane().setContent(grid);
+
+
+        ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        dialog.setResultConverter(new Callback<ButtonType, Pelicula>() {
+            public Pelicula call(ButtonType b) {
+
+                if(b == buttonTypeOk) {
+                    if(!texto1.getText().isEmpty()) {
+                        Pelicula m = new Pelicula(-1,texto1.getText(),0);
+
+                        return m;
+
+                    }else{
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Dejaste el espacio vacio");
+                        gameOver.showAndWait();
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<Pelicula> m1 = dialog.showAndWait();
+
+        if(m1.isPresent()){
+
+            if(!connection.lookAtNotRepeatPeliculas(m1.get().getNombre())){
+                connection.agregarPelicula(m1.get());
+                refreshInformationPeliculas();
+            }else{
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("Ya hay una pelicula igual");
+                gameOver.showAndWait();
+            }
+
+        }
+
+    }
+
+    public void refreshInformationPeliculas(){
+
+        informacionPelicula.clear();
+        informacionPelicula.appendText("Pelicula: id, nombre, id del genero" + "\n");
+        ArrayList<Pelicula> output = connection.getAllPeliculas();
+        if(output.size() != 0){
+            for(int i = 0; i < output.size(); i++) {
+                informacionPelicula.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + " , " + output.get(i).getGeneroID() + "\n");
+            }
+        }
     }
 
     public void refreshInformationGenero(){
         informacionGenero.clear();
-        informacionGenero.appendText("Genero: id,nombre" + "\n");
+        informacionGenero.appendText("Genero: id, nombre" + "\n");
         ArrayList<Genero> output = connection.getAllGeneros();
-        for(int i = 0; i < output.size(); i++){
-           informacionGenero.appendText("Id:" + output.get(i).getId() + "  " + "Nombre:" + output.get(i).getNombre() + "\n");
+        if(output.size() != 0){
+            for(int i = 0; i < output.size(); i++) {
+                informacionGenero.appendText("" + output.get(i).getId() + "." +  output.get(i).getNombre() + "\n");
+            }
         }
+    }
+
+    public void refreshInformationActor(){
+        informacionActor.clear();
+        informacionActor.appendText("Actor: id, nombre, apellido, edad" + "\n");
+        ArrayList<Actor> output = connection.getAllActor();
+        if(output.size() != 0){
+            for(int i = 0; i < output.size(); i++) {
+                informacionActor.appendText("" + output.get(i).getId() + "." +  output.get(i).getNombre() + "  " +output.get(i).getApellido() + ", " +
+                         output.get(i).getEdad()   + "\n");
+            }
+        }
+    }
+
+    public void vincularPeliculaYActor(){
+
+    }
+
+    public void vincularPeliculaYGenero(){
+
+        Dialog<String> dialog = new Dialog<String>();
+        dialog.setTitle("Vincular Pelicula y Genero");
+        dialog.setHeaderText("Por favor, utilice los id mostrados de las peliculas y genero");
+        dialog.setResizable(false);
+        Label label1 = new Label("id de la pelicula a seleccionar: ");
+        TextField texto1 = new TextField();
+        Label label2 = new Label("id del genero a seleccionar: ");
+        TextField texto2 = new TextField();
+
+        GridPane grid = new GridPane();
+        grid.add(label1,1,1);
+        grid.add(texto1,2,1);
+        grid.add(label2,1,2);
+        grid.add(texto2,2,2);
+
+        dialog.getDialogPane().setContent(grid);
+
+
+        ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+
 
     }
 

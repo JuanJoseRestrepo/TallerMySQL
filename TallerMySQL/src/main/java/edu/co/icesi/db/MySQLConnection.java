@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class MySQLConnection {
 
     private Connection connection;
+    private static MySQLConnection instance = null;
 
     public MySQLConnection(){
 
@@ -20,6 +21,15 @@ public class MySQLConnection {
         }
 
     }
+
+    public static synchronized MySQLConnection getInstance() {
+
+        if(instance == null) {
+            instance = new MySQLConnection();
+        }
+        return instance;
+    }
+
 
     public void closeDB(){
         try {
@@ -65,22 +75,12 @@ public class MySQLConnection {
         }
     }
 
-    public void agregarGenero(Genero genero){
-        try {
-            Statement statement = connection.createStatement();
-            String sql = ("INSERT INTO generos(nombre) VALUES('$NOMBRE')")
-                    .replace("$NOMBRE", genero.getNombre());
-            statement.execute(sql);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
     public ArrayList<Genero> getAllGeneros(){
         ArrayList<Genero> output = new ArrayList<Genero>();
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT * FROM generos";
+
             ResultSet resultados = statement.executeQuery(sql);
 
             while(resultados.next()){
@@ -95,26 +95,136 @@ public class MySQLConnection {
         return output;
     }
 
+    public ArrayList<Pelicula> getAllPeliculas(){
+        ArrayList<Pelicula> output = new ArrayList<Pelicula>();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "SELECT * FROM peliculas";
+            ResultSet resultados = statement.executeQuery(sql);
 
+            while(resultados.next()){
+                int id = resultados.getInt(resultados.findColumn("id"));
+                String nombre = resultados.getString(resultados.findColumn("nombre"));
+                int generoID = resultados.getInt(resultados.findColumn("generoID"));
+                output.add(new Pelicula(id,nombre,generoID));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return output;
+    }
+
+    public ArrayList<Actor> getAllActor(){
+        ArrayList<Actor> output = new ArrayList<Actor>();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "SELECT * FROM actores";
+            ResultSet resultados = statement.executeQuery(sql);
+
+            while(resultados.next()){
+                int id = resultados.getInt(resultados.findColumn("id"));
+                String nombre = resultados.getString(resultados.findColumn("nombre"));
+                String apellido = resultados.getString(resultados.findColumn("apellido"));
+                int edad = resultados.getInt(resultados.findColumn("edad"));
+                output.add(new Actor(id,nombre,apellido,edad));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return output;
+    }
+
+    public boolean lookAtNotRepeatPeliculas(String nombre){
+        boolean t = false;
+        ArrayList<Pelicula> output = getAllPeliculas();
+
+        if(output.size() != 0){
+
+            for(int i = 0; i < output.size() && !t;i++){
+                if(output.get(i).getNombre().equalsIgnoreCase(nombre)){
+                    t = true;
+                }
+
+            }
+
+        }
+
+        return t;
+    }
 
     public boolean lookAtNotRepeatGenero(String genero){
         boolean t = false;
         ArrayList<Genero> output = getAllGeneros();
+        if(output.size() != 0){
+            for(int i = 0; i < output.size() && !t;i++){
+                if(output.get(i).getNombre().equalsIgnoreCase(genero)){
+                    t = true;
+                }
 
-        for(int i = 0; i < output.size() && !t;i++){
-            if(output.get(i).getNombre().equalsIgnoreCase(genero)){
-                t = true;
             }
-
         }
         return t;
     }
 
+    public boolean lookAtNotRepeatActor(String nombre , String apellido){
+        boolean t = false;
+        ArrayList<Actor> output = getAllActor();
+        if(output.size() != 0){
+            for(int i = 0; i < output.size() && !t;i++){
+                if(output.get(i).getNombre().equalsIgnoreCase(nombre) && output.get(i).getApellido().equalsIgnoreCase(apellido)){
+                    t = true;
+                }
+            }
+        }
+        return t;
+    }
+
+    public void agregarGenero(Genero genero){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("INSERT INTO generos(nombre) VALUES('$NOMBRE')")
+                    .replace("$NOMBRE", genero.getNombre());
+            statement.execute(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public void agregarPelicula(Pelicula pelicula){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("INSERT INTO peliculas(nombre,generoID) VALUES('$NOMBRE',NULL)")
+                    .replace("$NOMBRE", pelicula.getNombre());
+            statement.execute(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
 
     public void agregarActor(Actor actor){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("INSERT INTO actores(nombre,apellido,edad) VALUES('$NOMBRE','$APELLIDO',$EDAD)")
+                    .replace("$NOMBRE", actor.getNombre())
+                    .replace("$APELLIDO", actor.getApellido())
+                    .replace("$EDAD", "" + actor.getEdad());
+            statement.execute(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void vincularPeliculaYGenero(Pelicula pelicula){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("INSERT INTO actores(nombre,apellido,edad) VALUES('$NOMBRE','$APELLIDO',$EDAD)");
+            statement.execute(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
 

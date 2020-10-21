@@ -1,5 +1,6 @@
 package edu.co.icesi.main;
 
+import edu.co.icesi.db.MySQLConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -25,6 +26,13 @@ public class Main extends Application {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void stop(){
+        MySQLConnection connection = MySQLConnection.getInstance();
+        connection.closeDB();
+        System.exit(0);
     }
 
     public static void main(String[] args) {

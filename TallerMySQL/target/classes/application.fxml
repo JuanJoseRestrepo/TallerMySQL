@@ -8,22 +8,23 @@
 
 <AnchorPane prefHeight="740.0" prefWidth="801.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.co.icesi.controller.windowController">
    <children>
-      <TextArea layoutX="21.0" layoutY="28.0" prefHeight="324.0" prefWidth="261.0" />
-      <TextArea layoutX="296.0" layoutY="28.0" prefHeight="324.0" prefWidth="262.0" />
+      <TextArea fx:id="informacionAuxiliar" layoutX="21.0" layoutY="28.0" prefHeight="324.0" prefWidth="261.0" />
+      <TextArea fx:id="informacionPelicula" layoutX="296.0" layoutY="28.0" prefHeight="324.0" prefWidth="262.0" />
       <VBox layoutX="618.0" layoutY="252.0" prefHeight="200.0" prefWidth="125.0">
          <children>
-            <Button fx:id="botonDeAgregar" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="Agregar Pelicula" />
+            <Button fx:id="botonDeAgregar" mnemonicParsing="false" onAction="#agregarPelicula" prefHeight="26.0" prefWidth="134.0" text="Agregar Pelicula" />
             <Button fx:id="botonDeAgregarGeneros" mnemonicParsing="false" onAction="#agregarGenero" prefHeight="26.0" prefWidth="126.0" text="Agregar Genero" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="132.0" text="Agregar Actor" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="148.0" text="Vincular P y A" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="151.0" text="Vincular P y G" />
+            <Button fx:id="botonDeAgregarActores" mnemonicParsing="false" onAction="#agregarActor" prefHeight="26.0" prefWidth="132.0" text="Agregar Actor" />
+            <Button fx:id="vincularPeliculaYActor" mnemonicParsing="false" prefHeight="26.0" prefWidth="148.0" text="Vincular P y A" />
+            <Button fx:id="vincularPeliculaYGenero" mnemonicParsing="false" prefHeight="26.0" prefWidth="151.0" text="Vincular P y G" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Lista P x G" />
          </children>
       </VBox>
-      <TextArea layoutX="20.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
+      <TextArea fx:id="informacionActor" layoutX="20.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
       <TextArea fx:id="informacionGenero" layoutX="301.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
       <Label layoutX="301.0" layoutY="5.0" text="Pelicula" />
       <Label layoutX="21.0" layoutY="362.0" text="Actor" />
       <Label layoutX="301.0" layoutY="362.0" text="Genero" />
-      <Label layoutX="21.0" layoutY="14.0" text="." />
+      <Label fx:id="TituloAuxiliar" layoutX="21.0" layoutY="14.0" text="." />
    </children>
 </AnchorPane>
