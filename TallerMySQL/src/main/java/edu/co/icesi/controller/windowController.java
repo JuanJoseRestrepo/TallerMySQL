@@ -339,6 +339,7 @@ public class windowController implements Initializable {
                     Alert gameOver = new Alert(AlertType.INFORMATION);
                     gameOver.setTitle("ERROR");
                     gameOver.setHeaderText("No existe ninguna pelicula o actor");
+                    
                     gameOver.showAndWait();
                 }
 
