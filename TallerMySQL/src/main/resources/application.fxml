@@ -10,14 +10,11 @@
    <children>
       <TextArea fx:id="informacionAuxiliar" layoutX="21.0" layoutY="28.0" prefHeight="324.0" prefWidth="261.0" />
       <TextArea fx:id="informacionPelicula" layoutX="296.0" layoutY="28.0" prefHeight="324.0" prefWidth="262.0" />
-      <VBox layoutX="618.0" layoutY="252.0" prefHeight="200.0" prefWidth="125.0">
+      <VBox layoutX="579.0" layoutY="66.0" prefHeight="90.0" prefWidth="126.0">
          <children>
             <Button fx:id="botonDeAgregar" mnemonicParsing="false" onAction="#agregarPelicula" prefHeight="26.0" prefWidth="134.0" text="Agregar Pelicula" />
             <Button fx:id="botonDeAgregarGeneros" mnemonicParsing="false" onAction="#agregarGenero" prefHeight="26.0" prefWidth="126.0" text="Agregar Genero" />
             <Button fx:id="botonDeAgregarActores" mnemonicParsing="false" onAction="#agregarActor" prefHeight="26.0" prefWidth="132.0" text="Agregar Actor" />
-            <Button fx:id="vincularPeliculaYActor" mnemonicParsing="false" prefHeight="26.0" prefWidth="148.0" text="Vincular P y A" />
-            <Button fx:id="vincularPeliculaYGenero" mnemonicParsing="false" prefHeight="26.0" prefWidth="151.0" text="Vincular P y G" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Lista P x G" />
          </children>
       </VBox>
       <TextArea fx:id="informacionActor" layoutX="20.0" layoutY="380.0" prefHeight="324.0" prefWidth="262.0" />
@@ -26,5 +23,24 @@
       <Label layoutX="21.0" layoutY="362.0" text="Actor" />
       <Label layoutX="301.0" layoutY="362.0" text="Genero" />
       <Label fx:id="TituloAuxiliar" layoutX="21.0" layoutY="14.0" text="." />
+      <VBox layoutX="579.0" layoutY="600.0" prefHeight="76.0" prefWidth="126.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#vincularPeliculaYActor" prefHeight="26.0" prefWidth="148.0" text="Vincular P y A" />
+            <Button mnemonicParsing="false" onAction="#vincularPeliculaYGenero" prefHeight="26.0" prefWidth="151.0" text="Vincular P y G" />
+         </children>
+      </VBox>
+      <VBox layoutX="579.0" layoutY="412.0" prefHeight="200.0" prefWidth="126.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Lista P x G" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Lista P x A" />
+         </children>
+      </VBox>
+      <VBox layoutX="579.0" layoutY="218.0" prefHeight="90.0" prefWidth="126.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="136.0" text="Eliminar Pelicula" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Eliminar Actor" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Eliminar Genero" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

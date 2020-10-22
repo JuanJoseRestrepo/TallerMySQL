@@ -95,6 +95,22 @@ public class MySQLConnection {
         return output;
     }
 
+    public Pelicula getPelicula(int id){
+        Pelicula pe = null;
+        ArrayList<Pelicula> output = getAllPeliculas();
+
+        for(int i = 0; i < output.size();i++){
+
+            if(output.get(i).getId() == id){
+                pe = output.get(i);
+            }
+
+        }
+
+        return pe;
+
+    }
+
     public ArrayList<Pelicula> getAllPeliculas(){
         ArrayList<Pelicula> output = new ArrayList<Pelicula>();
         try {
@@ -135,6 +151,49 @@ public class MySQLConnection {
         }
         return output;
     }
+
+    public boolean lookThatFoundActor(int id){
+        boolean t = false;
+        ArrayList<Actor> output = getAllActor();
+
+        if(output.size() != 0){
+            for(int i = 0; i < output.size() && !t;i++){
+                if(output.get(i).getId() == id){
+                    t = true;
+                }
+            }
+        }
+        return t;
+    }
+
+    public boolean lookThatFoundPelicula(int id){
+        boolean t = false;
+        ArrayList<Pelicula> output = getAllPeliculas();
+
+        if(output.size() != 0){
+            for(int i = 0; i < output.size() && !t;i++){
+                if(output.get(i).getId() == id){
+                    t = true;
+                }
+            }
+        }
+        return t;
+    }
+
+    public boolean lookThatFoundGenero(int id){
+        boolean t = false;
+        ArrayList<Genero> output = getAllGeneros();
+
+        if(output.size() != 0){
+            for(int i = 0; i < output.size() && !t;i++){
+                if(output.get(i).getId() == id){
+                    t = true;
+                }
+            }
+        }
+        return t;
+    }
+
 
     public boolean lookAtNotRepeatPeliculas(String nombre){
         boolean t = false;
@@ -217,15 +276,60 @@ public class MySQLConnection {
         }
     }
 
-    public void vincularPeliculaYGenero(Pelicula pelicula){
+    public void vincularPeliculaYActor(int idPelicula,int idActor){
+
         try {
             Statement statement = connection.createStatement();
-            String sql = ("INSERT INTO actores(nombre,apellido,edad) VALUES('$NOMBRE','$APELLIDO',$EDAD)");
+            String sql = ("INSERT INTO actores_peliculas(peliculasID,actoresID) VALUES($PELICULASID,$ACTORESID)")
+                    .replace("$PELICULASID","" + idPelicula)
+                    .replace("$ACTORESID", "" + idActor);
             statement.execute(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
     }
+
+    public void vincularPeliculaYGenero(Pelicula pelicula, int id){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("UPDATE peliculas SET generoID = $GENEROID  WHERE id = $ID ")
+                    .replace("$GENEROID" ,"" + id)
+                    .replace("$ID", "" + pelicula.getId());
+            statement.execute(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    public void eliminarPelicula(int idPelicula){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("DELETE FROM actores_peliculas WHERE peliculasID = $PELICULASID")
+                    .replace("$PELICULASID" ,"" + idPelicula);
+            String sql1 = ("DELETE FROM peliculas WHERE id = $PELICULASID")
+                    .replace("$PELICULASID","" + idPelicula);
+            statement.execute(sql);
+            statement.execute(sql1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void eliminarActor(int idActor){
+        try {
+            Statement statement = connection.createStatement();
+            String sql = ("DELETE FROM actores_peliculas WHERE actoresID = $ACTORID")
+                    .replace("$ACTORID" ,"" + idActor);
+            String sql1 = ("DELETE FROM actores WHERE id = $ACTORID")
+                    .replace("$ACTORID","" + idActor);
+            statement.execute(sql);
+            statement.execute(sql1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
 
 }

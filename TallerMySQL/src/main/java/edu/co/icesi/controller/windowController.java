@@ -274,11 +274,89 @@ public class windowController implements Initializable {
         }
     }
 
-    public void vincularPeliculaYActor(){
+    public void vincularPeliculaYActor(ActionEvent e){
+
+
+            Dialog<String> dialog = new Dialog<String>();
+            dialog.setTitle("Vincular Pelicula y Genero");
+            dialog.setHeaderText("Por favor, utilice los id mostrados de las peliculas y actores");
+            dialog.setResizable(false);
+            Label label1 = new Label("id de la pelicula: ");
+            TextField texto1 = new TextField();
+            Label label2 = new Label("id del actor: ");
+            TextField texto2 = new TextField();
+
+            GridPane grid = new GridPane();
+            grid.add(label1, 1, 1);
+            grid.add(texto1, 2, 1);
+            grid.add(label2, 1, 2);
+            grid.add(texto2, 2, 2);
+
+
+            dialog.getDialogPane().setContent(grid);
+
+            ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        dialog.setResultConverter(new Callback<ButtonType, String>() {
+            public String call(ButtonType b) {
+
+                if(b == buttonTypeOk) {
+                    if(!texto1.getText().isEmpty() && !texto2.getText().isEmpty()) {
+                        String m = texto1.getText().toString().trim() +" "+texto2.getText().toString().trim();
+                        System.out.println(m);
+                        return m;
+
+                    }else{
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Dejaste el espacio vacio");
+                        gameOver.showAndWait();
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<String> m1 = dialog.showAndWait();
+
+        if(m1.isPresent()){
+
+            try{
+                String[] numbers = m1.get().split(" ");
+                int idPelicula = Integer.parseInt(numbers[0]);
+                int idActor = Integer.parseInt(numbers[1]);
+
+                System.out.println(idPelicula + " " + idActor);
+
+                if(connection.lookThatFoundPelicula(idPelicula) && connection.lookThatFoundActor(idActor)){
+
+                    connection.vincularPeliculaYActor(idPelicula,idActor);
+                    System.out.println("LETS FUCKING GOOOOOOOOOOOOOOOOOOO");
+
+                }else{
+                    Alert gameOver = new Alert(AlertType.INFORMATION);
+                    gameOver.setTitle("ERROR");
+                    gameOver.setHeaderText("No existe ninguna pelicula o actor");
+                    gameOver.showAndWait();
+                }
+
+            }catch (NumberFormatException e1){
+
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("Formato invalido");
+                gameOver.showAndWait();
+
+            }
+
+        }
+
 
     }
 
-    public void vincularPeliculaYGenero(){
+    public void vincularPeliculaYGenero(ActionEvent e){
 
         Dialog<String> dialog = new Dialog<String>();
         dialog.setTitle("Vincular Pelicula y Genero");
@@ -301,6 +379,61 @@ public class windowController implements Initializable {
         ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
 
+        dialog.setResultConverter(new Callback<ButtonType, String>() {
+            public String call(ButtonType b) {
+
+                if(b == buttonTypeOk) {
+                    if(!texto1.getText().isEmpty() && !texto2.getText().isEmpty()) {
+                        String m = texto1.getText().toString().trim() +" "+texto2.getText().toString().trim();
+                        System.out.println(m);
+                        return m;
+
+                    }else{
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Dejaste el espacio vacio");
+                        gameOver.showAndWait();
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<String> m1 = dialog.showAndWait();
+
+        if(m1.isPresent()){
+
+            try{
+            String[] numbers = m1.get().split(" ");
+            int idPelicula = Integer.parseInt(numbers[0]);
+            int idGenero = Integer.parseInt(numbers[1]);
+
+            System.out.println(idPelicula + " " + idGenero);
+
+            if(connection.lookThatFoundPelicula(idPelicula) && connection.lookThatFoundGenero(idGenero)){
+
+                Pelicula pe = connection.getPelicula(idPelicula);
+                connection.vincularPeliculaYGenero(pe,idGenero);
+                refreshInformationPeliculas();
+
+            }else{
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("No existe ninguna pelicula o genero");
+                gameOver.showAndWait();
+            }
+
+            }catch (NumberFormatException e1){
+
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("Formato invalido");
+                gameOver.showAndWait();
+
+            }
+
+        }
 
 
     }
