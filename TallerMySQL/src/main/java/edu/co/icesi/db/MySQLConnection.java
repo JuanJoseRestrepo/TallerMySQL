@@ -111,6 +111,83 @@ public class MySQLConnection {
 
     }
 
+    public Genero getGenero(int id){
+        Genero ge = null;
+        ArrayList<Genero> output = getAllGeneros();
+
+        for(int i = 0; i < output.size();i++){
+
+            if(output.get(i).getId() == id){
+                ge = output.get(i);
+            }
+
+        }
+
+        return ge;
+    }
+
+    public ArrayList<Actor> actoresXPeliculas(int peliculadID){
+
+        ArrayList<Actor> output = new ArrayList<Actor>();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "SELECT actores.id, actores.nombre, actores.apellido,actores.edad FROM (actores INNER JOIN actores_peliculas ON actores.id = actores_peliculas.id) INNER JOIN peliculas ON actores_peliculas.id = peliculas.id WHERE peliculas.id="+ peliculadID;
+            ResultSet resultados = statement.executeQuery(sql);
+
+            while(resultados.next()){
+                int id = resultados.getInt(resultados.findColumn("id"));
+                String nombre = resultados.getString(resultados.findColumn("nombre"));
+                String apellido = resultados.getString(resultados.findColumn("apellido"));
+                int edad = resultados.getInt(resultados.findColumn("edad"));
+                output.add(new Actor(id,nombre,apellido,edad));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return output;
+
+    }
+
+    public ArrayList<Pelicula> peliculasXActores(int actorID){
+        ArrayList<Pelicula> output = new ArrayList<Pelicula>();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "SELECT peliculas.id, peliculas.nombre, peliculas.generoID FROM (peliculas INNER JOIN actores_peliculas ON peliculas.id = actores_peliculas.id) INNER  JOIN actores ON actores_peliculas.id = actores.id WHERE actores.id"+ actorID;
+            ResultSet resultados = statement.executeQuery(sql);
+
+            while(resultados.next()){
+                int id = resultados.getInt(resultados.findColumn("id"));
+                String nombre = resultados.getString(resultados.findColumn("nombre"));
+                int generoID = resultados.getInt(resultados.findColumn("generoID"));
+                output.add(new Pelicula(id,nombre,generoID));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return output;
+    }
+
+    public ArrayList<Pelicula> getMoviesByGenre(int generoID1){
+        ArrayList<Pelicula> output = new ArrayList<Pelicula>();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "SELECT peliculas.id, peliculas.nombre FROM peliculas INNER JOIN generos ON peliculas.generoID = generos.id WHERE generos.id="+ generoID1;
+            ResultSet resultados = statement.executeQuery(sql);
+
+            while(resultados.next()){
+                int id = resultados.getInt(resultados.findColumn("id"));
+                String nombre = resultados.getString(resultados.findColumn("nombre"));
+                output.add(new Pelicula(id,nombre,generoID1));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return output;
+    }
+
     public ArrayList<Pelicula> getAllPeliculas(){
         ArrayList<Pelicula> output = new ArrayList<Pelicula>();
         try {
@@ -302,6 +379,23 @@ public class MySQLConnection {
         }
     }
 
+    public void eliminarGenero(int generoID){
+        try {
+            Statement statement = connection.createStatement();
+            ArrayList<Pelicula> output = getMoviesByGenre(generoID);
+            for(int i = 0; i < output.size();i++){
+                int pelicula = output.get(i).getId();
+                eliminarPelicula(pelicula);
+            }
+            String sql = ("DELETE FROM generos WHERE generos.id = $PELICULASID")
+                    .replace("$PELICULASID" ,"" + generoID);
+            statement.execute(sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
 
     public void eliminarPelicula(int idPelicula){
         try {

@@ -22,8 +22,8 @@
       <Label layoutX="301.0" layoutY="5.0" text="Pelicula" />
       <Label layoutX="21.0" layoutY="362.0" text="Actor" />
       <Label layoutX="301.0" layoutY="362.0" text="Genero" />
-      <Label fx:id="TituloAuxiliar" layoutX="21.0" layoutY="14.0" text="." />
-      <VBox layoutX="579.0" layoutY="600.0" prefHeight="76.0" prefWidth="126.0">
+      <Label fx:id="TituloAuxiliar" layoutX="19.0" layoutY="5.0" text="." />
+      <VBox layoutX="579.0" layoutY="170.0" prefHeight="76.0" prefWidth="126.0">
          <children>
             <Button mnemonicParsing="false" onAction="#vincularPeliculaYActor" prefHeight="26.0" prefWidth="148.0" text="Vincular P y A" />
             <Button mnemonicParsing="false" onAction="#vincularPeliculaYGenero" prefHeight="26.0" prefWidth="151.0" text="Vincular P y G" />
@@ -31,15 +31,15 @@
       </VBox>
       <VBox layoutX="579.0" layoutY="412.0" prefHeight="200.0" prefWidth="126.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Lista P x G" />
+            <Button mnemonicParsing="false" onAction="#informationPivotePeliculaPorGenero" prefHeight="26.0" prefWidth="126.0" text="Lista P x G" />
             <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Lista P x A" />
          </children>
       </VBox>
-      <VBox layoutX="579.0" layoutY="218.0" prefHeight="90.0" prefWidth="126.0">
+      <VBox layoutX="579.0" layoutY="542.0" prefHeight="90.0" prefWidth="126.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="136.0" text="Eliminar Pelicula" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Eliminar Actor" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Eliminar Genero" />
+            <Button mnemonicParsing="false" onAction="#deleteMovie" prefHeight="26.0" prefWidth="136.0" text="Eliminar Pelicula" />
+            <Button mnemonicParsing="false" onAction="#deleteActor" prefHeight="26.0" prefWidth="130.0" text="Eliminar Actor" />
+            <Button mnemonicParsing="false" onAction="#deleteGenre" prefHeight="26.0" prefWidth="130.0" text="Eliminar Genero" />
          </children>
       </VBox>
    </children>
