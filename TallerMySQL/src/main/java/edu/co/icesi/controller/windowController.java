@@ -238,9 +238,45 @@ public class windowController implements Initializable {
         }
 
     }
+
+    public void informationPivoteTodaLaInformacion(ActionEvent e){
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
+        TituloAuxiliar.setText("Toda la informacion");
+        ArrayList<Pelicula> peliculas = connection.getAllPeliculas();
+
+        for(int i = 0; i < peliculas.size();i++){
+            ArrayList<Actor> actores = connection.actoresXPeliculas(peliculas.get(i).getId());
+            Genero genero = connection.getGenero(peliculas.get(i).getGeneroID());
+            String generoN = "";
+            if(genero == null){
+                generoN = "No tiene genero";
+            }else{
+                 generoN = genero.getNombre();
+            }
+
+            String titulo = peliculas.get(i).getNombre();
+            String msj = "\n" +"Nombre pelicula: " + titulo + "  " + "Genero:" + generoN;
+            for(int j = 0; j < actores.size();j++){
+                msj += "\n" + "Actor" + actores.get(j).getNombre() + "  ";
+            }
+            informacionAuxiliar.appendText(msj + "\n");
+        }
+
+    }
+
+    public void informationPivoteActorPorPelicula(ActionEvent e){
+
+    }
+
+    public void informationPivotePeliculaPorActor(ActionEvent e){
+
+    }
+
     
     public void informationPivotePeliculaPorGenero(ActionEvent e){
-
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
         Dialog<String> dialog = new Dialog<String>();
         dialog.setTitle("Mostrar informacion Pelicula por un genero");
         dialog.setHeaderText("Por favor, utilice los id mostrados para buscar una pelicula por el id del genero");
@@ -288,7 +324,6 @@ public class windowController implements Initializable {
 
                 int idGenero = Integer.parseInt(m1.get());
                 if(connection.lookThatFoundGenero(idGenero)){
-                    informacionAuxiliar.clear();
                     ArrayList<Pelicula> output = connection.getMoviesByGenre(idGenero);
                     Genero gen = connection.getGenero(idGenero);
                     TituloAuxiliar.setText("Peliculas por Genero");
@@ -302,7 +337,6 @@ public class windowController implements Initializable {
                     gameOver.setTitle("ERROR");
                     gameOver.setHeaderText("No existe ninguna pelicula o actor");
                     gameOver.showAndWait();
-                    informacionAuxiliar.clear();
                     informacionAuxiliar.appendText("No tiene ninguna pelicula o genero mani" + "\n");
                 }
 
@@ -322,19 +356,28 @@ public class windowController implements Initializable {
     }
 
     public void refreshInformationPeliculas(){
-
         informacionPelicula.clear();
-        informacionPelicula.appendText("Pelicula: id, nombre, id del genero" + "\n");
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
+        informacionPelicula.appendText("Pelicula: id, nombre,genero" + "\n");
         ArrayList<Pelicula> output = connection.getAllPeliculas();
         if(output.size() != 0){
             for(int i = 0; i < output.size(); i++) {
-                informacionPelicula.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + " , " + output.get(i).getGeneroID() + "\n");
+                Genero gen = connection.getGenero(output.get(i).getGeneroID());
+                if(gen != null){
+                    informacionPelicula.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + " , " + gen.getNombre() + "\n");
+                }else{
+                    informacionPelicula.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + " , " + "Sin genero (Vincule uno)" + "\n");
+                }
+
             }
         }
     }
 
     public void refreshInformationGenero(){
         informacionGenero.clear();
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
         informacionGenero.appendText("Genero: id, nombre" + "\n");
         ArrayList<Genero> output = connection.getAllGeneros();
         if(output.size() != 0){
@@ -345,6 +388,8 @@ public class windowController implements Initializable {
     }
 
     public void refreshInformationActor(){
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
         informacionActor.clear();
         informacionActor.appendText("Actor: id, nombre, apellido, edad" + "\n");
         ArrayList<Actor> output = connection.getAllActor();
@@ -358,7 +403,7 @@ public class windowController implements Initializable {
 
     public void vincularPeliculaYActor(ActionEvent e){
 
-
+            informacionAuxiliar.clear();
             Dialog<String> dialog = new Dialog<String>();
             dialog.setTitle("Vincular Pelicula y Genero");
             dialog.setHeaderText("Por favor, utilice los id mostrados de las peliculas y actores");
@@ -413,15 +458,21 @@ public class windowController implements Initializable {
                 System.out.println(idPelicula + " " + idActor);
 
                 if(connection.lookThatFoundPelicula(idPelicula) && connection.lookThatFoundActor(idActor)){
-
                     connection.vincularPeliculaYActor(idPelicula,idActor);
-                    System.out.println("LETS FUCKING GOOOOOOOOOOOOOOOOOOO");
+                    ArrayList<Actor> output = connection.actoresXPeliculas(idPelicula);
+                    Pelicula pe = connection.getPelicula(idPelicula);
+                    TituloAuxiliar.setText("Informacion de vinculacion");
+                    informacionAuxiliar.appendText(pe.getNombre() + "\n");
+                    System.out.println(output.size() + "asdasds");
+                    for(int i = 0; i < output.size(); i++) {
+                        informacionAuxiliar.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + " , " + output.get(i).getApellido() + "\n");
+                    }
+
 
                 }else{
                     Alert gameOver = new Alert(AlertType.INFORMATION);
                     gameOver.setTitle("ERROR");
                     gameOver.setHeaderText("No existe ninguna pelicula o actor");
-                    
                     gameOver.showAndWait();
                 }
 
@@ -650,8 +701,6 @@ public class windowController implements Initializable {
                     connection.eliminarActor(idActor);
                     refreshInformationActor();
 
-                    System.out.println("LETS FUCKING GOOOOOOOOOOOOOOOOOOO");
-
                 }else{
                     Alert gameOver = new Alert(AlertType.INFORMATION);
                     gameOver.setTitle("ERROR");
@@ -726,7 +775,6 @@ public class windowController implements Initializable {
                     connection.eliminarGenero(idGenero);
                     refreshInformationPeliculas();
                     refreshInformationGenero();
-                    System.out.println("LETS FUCKING GOOOOOOOOOOOOOOOOOOO");
 
                 }else{
                     Alert gameOver = new Alert(AlertType.INFORMATION);

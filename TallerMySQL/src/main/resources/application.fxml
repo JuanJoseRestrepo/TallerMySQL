@@ -10,7 +10,7 @@
    <children>
       <TextArea fx:id="informacionAuxiliar" layoutX="21.0" layoutY="28.0" prefHeight="324.0" prefWidth="261.0" />
       <TextArea fx:id="informacionPelicula" layoutX="296.0" layoutY="28.0" prefHeight="324.0" prefWidth="262.0" />
-      <VBox layoutX="579.0" layoutY="66.0" prefHeight="90.0" prefWidth="126.0">
+      <VBox layoutX="579.0" layoutY="123.0" prefHeight="90.0" prefWidth="126.0">
          <children>
             <Button fx:id="botonDeAgregar" mnemonicParsing="false" onAction="#agregarPelicula" prefHeight="26.0" prefWidth="134.0" text="Agregar Pelicula" />
             <Button fx:id="botonDeAgregarGeneros" mnemonicParsing="false" onAction="#agregarGenero" prefHeight="26.0" prefWidth="126.0" text="Agregar Genero" />
@@ -23,7 +23,7 @@
       <Label layoutX="21.0" layoutY="362.0" text="Actor" />
       <Label layoutX="301.0" layoutY="362.0" text="Genero" />
       <Label fx:id="TituloAuxiliar" layoutX="19.0" layoutY="5.0" text="." />
-      <VBox layoutX="579.0" layoutY="170.0" prefHeight="76.0" prefWidth="126.0">
+      <VBox layoutX="579.0" layoutY="239.0" prefHeight="76.0" prefWidth="126.0">
          <children>
             <Button mnemonicParsing="false" onAction="#vincularPeliculaYActor" prefHeight="26.0" prefWidth="148.0" text="Vincular P y A" />
             <Button mnemonicParsing="false" onAction="#vincularPeliculaYGenero" prefHeight="26.0" prefWidth="151.0" text="Vincular P y G" />
@@ -32,7 +32,8 @@
       <VBox layoutX="579.0" layoutY="412.0" prefHeight="200.0" prefWidth="126.0">
          <children>
             <Button mnemonicParsing="false" onAction="#informationPivotePeliculaPorGenero" prefHeight="26.0" prefWidth="126.0" text="Lista P x G" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Lista P x A" />
+            <Button mnemonicParsing="false" onAction="#informationPivotePeliculaPorActor" prefHeight="26.0" prefWidth="130.0" text="Lista P x A" />
+            <Button mnemonicParsing="false" onAction="#informationPivoteActorPorPelicula" prefHeight="26.0" prefWidth="128.0" text="Lista A x P" />
          </children>
       </VBox>
       <VBox layoutX="579.0" layoutY="542.0" prefHeight="90.0" prefWidth="126.0">
@@ -42,5 +43,9 @@
             <Button mnemonicParsing="false" onAction="#deleteGenre" prefHeight="26.0" prefWidth="130.0" text="Eliminar Genero" />
          </children>
       </VBox>
+      <Label layoutX="585.0" layoutY="19.0" text="P = Peliculas" />
+      <Label layoutX="587.0" layoutY="55.0" text="G = Genero" />
+      <Label layoutX="585.0" layoutY="37.0" text="A= Actor" />
+      <Button layoutX="579.0" layoutY="671.0" mnemonicParsing="false" onAction="#informationPivoteTodaLaInformacion" text="Mostrar toda la informacion" />
    </children>
 </AnchorPane>

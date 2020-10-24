@@ -131,7 +131,7 @@ public class MySQLConnection {
         ArrayList<Actor> output = new ArrayList<Actor>();
         try {
             Statement statement = connection.createStatement();
-            String sql = "SELECT actores.id, actores.nombre, actores.apellido,actores.edad FROM (actores INNER JOIN actores_peliculas ON actores.id = actores_peliculas.id) INNER JOIN peliculas ON actores_peliculas.id = peliculas.id WHERE peliculas.id="+ peliculadID;
+            String sql = "SELECT actores.id, actores.nombre, actores.apellido,actores.edad FROM (actores INNER JOIN actores_peliculas ON actores.id = actores_peliculas.actoresID) INNER JOIN peliculas ON actores_peliculas.peliculasID = peliculas.id WHERE peliculas.id="+ peliculadID;
             ResultSet resultados = statement.executeQuery(sql);
 
             while(resultados.next()){
@@ -153,7 +153,7 @@ public class MySQLConnection {
         ArrayList<Pelicula> output = new ArrayList<Pelicula>();
         try {
             Statement statement = connection.createStatement();
-            String sql = "SELECT peliculas.id, peliculas.nombre, peliculas.generoID FROM (peliculas INNER JOIN actores_peliculas ON peliculas.id = actores_peliculas.id) INNER  JOIN actores ON actores_peliculas.id = actores.id WHERE actores.id"+ actorID;
+            String sql = "SELECT peliculas.id, peliculas.nombre, peliculas.generoID FROM (peliculas INNER JOIN actores_peliculas ON peliculas.id = actores_peliculas.peliculasID) INNER  JOIN actores ON actores_peliculas.actoresID = actores.id WHERE actores.id="+ actorID;
             ResultSet resultados = statement.executeQuery(sql);
 
             while(resultados.next()){
