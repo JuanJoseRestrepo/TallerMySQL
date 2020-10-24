@@ -258,7 +258,7 @@ public class windowController implements Initializable {
             String titulo = peliculas.get(i).getNombre();
             String msj = "\n" +"Nombre pelicula: " + titulo + "  " + "Genero:" + generoN;
             for(int j = 0; j < actores.size();j++){
-                msj += "\n" + "Actor" + actores.get(j).getNombre() + "  ";
+                msj += "\n" + "Actor: " + actores.get(j).getNombre() + "  " + actores.get(j).getApellido();
             }
             informacionAuxiliar.appendText(msj + "\n");
         }
@@ -266,10 +266,160 @@ public class windowController implements Initializable {
     }
 
     public void informationPivoteActorPorPelicula(ActionEvent e){
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
+        Dialog<String> dialog = new Dialog<String>();
+        dialog.setTitle("Mostrar informacion un actor por pelicula");
+        dialog.setHeaderText("Por favor, utilice los id mostrados para buscar una pelicua por el id ");
+        dialog.setResizable(false);
+        Label label1 = new Label("id de la pelicula: ");
+        TextField texto1 = new TextField();
+
+
+        GridPane grid = new GridPane();
+        grid.add(label1,1,1);
+        grid.add(texto1,2,1);
+
+        dialog.getDialogPane().setContent(grid);
+
+
+        ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        dialog.setResultConverter(new Callback<ButtonType, String>() {
+            public String call(ButtonType b) {
+
+                if(b == buttonTypeOk) {
+                    if(!texto1.getText().isEmpty()) {
+                        String m = texto1.getText().toString().trim();
+
+                        return m;
+
+                    }else{
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Dejaste el espacio vacio");
+                        gameOver.showAndWait();
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<String> m1 = dialog.showAndWait();
+
+        if(m1.isPresent()){
+
+            try{
+
+                int idPelicula = Integer.parseInt(m1.get());
+                if(connection.lookThatFoundPelicula(idPelicula)){
+                    ArrayList<Actor> output = connection.actoresXPeliculas(idPelicula);
+                    Pelicula gen = connection.getPelicula(idPelicula);
+                    TituloAuxiliar.setText("Actores por pelicula");
+                    informacionAuxiliar.appendText(gen.getNombre() + "\n");
+                    for(int i = 0; i < output.size(); i++) {
+                        informacionAuxiliar.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + " , " + output.get(i).getApellido() + "\n");
+                    }
+
+                }else{
+                    Alert gameOver = new Alert(AlertType.INFORMATION);
+                    gameOver.setTitle("ERROR");
+                    gameOver.setHeaderText("No existe ninguna pelicula o actor");
+                    gameOver.showAndWait();
+                }
+
+            }catch (NumberFormatException e1){
+
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("Formato invalido");
+                gameOver.showAndWait();
+
+            }
+
+        }
+
 
     }
 
     public void informationPivotePeliculaPorActor(ActionEvent e){
+        informacionAuxiliar.clear();
+        TituloAuxiliar.setText(".");
+
+        Dialog<String> dialog = new Dialog<String>();
+        dialog.setTitle("Mostrar informacion de actores de un pelicula");
+        dialog.setHeaderText("Por favor, utilice los id mostrados para mostrar una pelicula");
+        dialog.setResizable(false);
+        Label label1 = new Label("id del actor: ");
+        TextField texto1 = new TextField();
+
+        GridPane grid = new GridPane();
+        grid.add(label1,1,1);
+        grid.add(texto1,2,1);
+
+        dialog.getDialogPane().setContent(grid);
+
+
+        ButtonType buttonTypeOk = new ButtonType("Accept", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+
+        dialog.setResultConverter(new Callback<ButtonType, String>() {
+            public String call(ButtonType b) {
+
+                if(b == buttonTypeOk) {
+                    if(!texto1.getText().isEmpty()) {
+                        String m = texto1.getText().toString().trim();
+
+                        return m;
+
+                    }else{
+                        Alert gameOver = new Alert(AlertType.INFORMATION);
+                        gameOver.setTitle("ERROR");
+                        gameOver.setHeaderText("Dejaste el espacio vacio");
+                        gameOver.showAndWait();
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<String> m1 = dialog.showAndWait();
+
+        if(m1.isPresent()){
+
+            try{
+
+                int idActor = Integer.parseInt(m1.get());
+                if(connection.lookThatFoundActor(idActor)){
+                    ArrayList<Pelicula> output = connection.peliculasPorActores(idActor);
+                    Actor gen = connection.getActor(idActor);
+                    TituloAuxiliar.setText("Peliculas de unos actores");
+                    informacionAuxiliar.appendText(gen.getNombre() + "\n");
+                    for(int i = 0; i < output.size(); i++) {
+                        informacionAuxiliar.appendText("" + output.get(i).getId() + "." + output.get(i).getNombre() + "\n");
+                    }
+
+                }else{
+                    Alert gameOver = new Alert(AlertType.INFORMATION);
+                    gameOver.setTitle("ERROR");
+                    gameOver.setHeaderText("No existe ninguna pelicula o actor");
+                    gameOver.showAndWait();
+                }
+
+            }catch (NumberFormatException e1){
+
+                Alert gameOver = new Alert(AlertType.INFORMATION);
+                gameOver.setTitle("ERROR");
+                gameOver.setHeaderText("Formato invalido");
+                gameOver.showAndWait();
+
+            }
+
+        }
 
     }
 

@@ -126,6 +126,22 @@ public class MySQLConnection {
         return ge;
     }
 
+    public Actor getActor(int id){
+        Actor ge = null;
+        ArrayList<Actor> output = getAllActor();
+
+        for(int i = 0; i < output.size();i++){
+
+            if(output.get(i).getId() == id){
+                ge = output.get(i);
+            }
+
+        }
+
+        return ge;
+    }
+
+
     public ArrayList<Actor> actoresXPeliculas(int peliculadID){
 
         ArrayList<Actor> output = new ArrayList<Actor>();
@@ -149,7 +165,7 @@ public class MySQLConnection {
 
     }
 
-    public ArrayList<Pelicula> peliculasXActores(int actorID){
+    public ArrayList<Pelicula> peliculasPorActores(int actorID){
         ArrayList<Pelicula> output = new ArrayList<Pelicula>();
         try {
             Statement statement = connection.createStatement();
